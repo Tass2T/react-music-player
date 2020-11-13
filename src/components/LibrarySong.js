@@ -1,5 +1,5 @@
 
-
+import playAudio from '../util'
 
 export default function LibrarySong ({ songs, setSongs, isPlaying, audioRef, setCurrentSong, song}) {
 
@@ -21,14 +21,7 @@ export default function LibrarySong ({ songs, setSongs, isPlaying, audioRef, set
         })
         setSongs(newSongs)
         // check if the song is played, if it is, then play the new song
-        if(isPlaying) {
-            const playPromise = audioRef.current.play()
-            if (playPromise !== undefined) {
-                playPromise.then((audio) => {
-                    audioRef.current.play()
-                })
-            }
-        }
+        playAudio(isPlaying, audioRef)
         
     }
 

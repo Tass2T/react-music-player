@@ -1,7 +1,10 @@
+import {useEffect} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlay, faAngleLeft, faAngleRight, faPause} from '@fortawesome/free-solid-svg-icons'
+import audioPlay from '../util'
+import playAudio from '../util'
 
-export default function Player ({songs, setCurrentSong, audioRef, songInfo, setSongInfo, isPlaying, setIsplaying, currentSong}) {
+export default function Player ({songs, setSongs, setCurrentSong, audioRef, songInfo, setSongInfo, isPlaying, setIsplaying, currentSong}) {
     
 
     const playSongHandler = () => {
@@ -36,7 +39,25 @@ export default function Player ({songs, setCurrentSong, audioRef, songInfo, setS
                 setCurrentSong(songs[currentIndex-1])
             }
         }
+        playAudio(isPlaying, audioRef)
     }
+
+    useEffect(() => {
+        const newSongs = songs.map(item => {
+            if (item.id === currentSong.id) {
+                return {
+                    ...item,
+                    active: true
+                }
+            } else {
+                return {
+                    ...item,
+                    active: false
+                }
+            }
+        })
+        setSongs(newSongs)
+    }, [currentSong])
 
     return (
         <div className="player">
