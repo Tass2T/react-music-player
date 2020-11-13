@@ -1,17 +1,40 @@
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlay, faAngleLeft, faAngleRight} from '@fortawesome/free-solid-svg-icons'
+import {faPlay, faAngleLeft, faAngleRight, faPause} from '@fortawesome/free-solid-svg-icons'
 
-export default function Player () {
+export default function Player ({audioRef, songInfo, setSongInfo, isPlaying, setIsplaying, currentSong}) {
+    
+
+    const playSongHandler = () => {
+        if (isPlaying) {
+            audioRef.current.pause()
+            setIsplaying(false)
+        } else {
+            audioRef.current.play()
+            setIsplaying(true)
+        }
+    }
+
+    const getTime = (time) => {
+        return (
+            Math.floor(time/60) + ":" + ("0" + Math.floor(time%60)).slice(-2)
+        )
+    }
+
+    const dragHandler = (e) => {
+        audioRef.current.currentTime = e.target.value
+        setSongInfo({...songInfo, currentTime: e.target.value})
+    }
+
     return (
         <div className="player">
             <div className="time-control">
-                <p>start time</p>
-                <input type="range"/>
-                <p>End Time</p>
+                <p>{getTime(songInfo.currentTime) || 0}</p>
+                <input min={0} max={songInfo.duration} value={songInfo.currentTime} onChange={dragHandler} type="range"/>
+                <p>{getTime(songInfo.duration) || 0}</p>
             </div>
             <div className="play-control">
                 <FontAwesomeIcon className="skip-back" size="2x" icon={faAngleLeft}/>
-                <FontAwesomeIcon className="play" size="2x" icon={faPlay}/>
+                <FontAwesomeIcon onClick={playSongHandler} className="play" size="2x" icon={isPlaying? faPause : faPlay}/>
                 <FontAwesomeIcon className="skip-forward" size="2x" icon={faAngleRight}/>
             </div>
         </div>
